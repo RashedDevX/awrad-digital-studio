@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Muqeem Residential Arabic</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Success Toast Notification */
+        #toast-notification {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #27ae60;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 5px;
+            font-weight: bold;
+            display: none;
+            z-index: 2000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 20px;
+            direction: rtl;
+        }
+
+        .page {
+            background: white;
+            width: 210mm;
+            min-height: 297mm;
+            margin: 0 auto;
+            padding: 40px;
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        /* Header Style */
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+            flex-direction: row-reverse !important;
+        }
+
+        .meta-info {
+            font-size: 14px;
+            color: #333;
+        }
+
+        .meta-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 5px;
+        }
+
+        .meta-label { color: #ff7e05; font-weight: bold; width: 80px; }
+
+        .logo-section img {
+            width: 120px;
+        }
+
+        .report-title {
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            margin: 20px 0;
+            color: #2c3e50;
+        }
+
+        hr {
+            border: 0;
+            border-top: 2px solid #2c3e50;
+            margin: 15px 0;
+        }
+
+        /* Section Header */
+        .section-header {
+            text-align: center;
+            font-weight: bold;
+            font-size: 18px;
+            margin: 10px 0;
+            color: #000;
+        }
+
+        /* Grid Layout matching the Image */
+        .info-grid {
+            display: grid;
+            grid-template-columns: 120px 1fr 120px 1fr 120px 1fr;
+            gap: 10px 5px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .label {
+            color: #ff7e05;
+            font-weight: bold;
+        }
+
+        .value {
+            color: #333;
+        }
+
+        .full-width-row {
+            grid-column: span 5;
+        }
+
+        /* Employer Section */
+        .employer-grid {
+            display: grid;
+            grid-template-columns: 120px 1fr;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        /* Editor Panel Styles */
+        #editor-panel {
+            position: fixed;
+            top: 10px;
+            left: 10px; /* Left side for RTL */
+            background: #fff;
+            border: 2px solid #2c3e50;
+            padding: 15px;
+            z-index: 1000;
+            width: 300px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            border-radius: 8px;
+            display: none;
+            direction: ltr; /* Form input remains LTR for ease */
+        }
+
+        #toggle-editor { position: fixed; bottom: 20px; left: 20px; background: #2c3e50; color: white; border: none; padding: 10px 20px; border-radius: 50px; cursor: pointer; z-index: 999; }
+
+        @media print {
+            @page {
+                margin: 0; /* এটি হেডার/ফুটার টেক্সট রিমুভ করবে */
+            }
+            body {
+                background: white;
+                padding: 0;
+                margin: 0;
+                display: flex;
+                justify-content: center; /* কন্টেন্ট মাঝখানে রাখার জন্য */
+            }
+            .page {
+                margin: 0 auto; /* পেজটি সেন্টারে রাখবে */
+                border: none;
+                box-shadow: none;
+                width: 210mm; /* A4 সাইজ নিশ্চিত করবে */
+            }
+            #editor-panel, #toggle-editor { 
+                display: none !important; 
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <button id="toggle-editor" onclick="togglePanel()">Edit Information</button>
+
+    <div id="editor-panel">
+        <h3>Edit Values</h3>
+        <div id="form-container"></div>
+        <div style="display:flex; gap:10px; margin-top:10px;">
+            <button onclick="saveData()" style="background:#27ae60; color:white; border:none; padding:10px; flex:1; cursor:pointer;">Update</button>
+            <button onclick="togglePanel()" style="background:#e74c3c; color:white; border:none; padding:10px; cursor:pointer;">Close</button>
+        </div>
+    </div>
+
+    <div class="page">
+        <div class="header-top">
+            <div class="meta-info">
+                <div class="meta-row"><span class="meta-label">تاريخ التقرير</span><span class="value editable">١٤٤٥-١٢-٠٢</span></div>
+                <div class="meta-row"><span class="meta-label">رقم المشغل</span><span class="value editable">١٠٠٢٢١٠١٤٢</span></div>
+                <div class="meta-row"><span class="meta-label">الموقع</span><span class="value editable">بوابة مقيم</span></div>
+            </div>
+
+            <div class="report-title">بيانات مقيم</div>
+
+            <div class="logo-section">
+                <img src="https://muqeem.sa/content/images/Xmuqeem.svg" alt="Muqeem Logo">
+            </div>
+        </div>
+
+        
+        <hr>
+
+        <div class="section-header">بيانات الشخص - رب أسرة</div>
+        
+        <div class="info-grid">
+            <div class="label">رقم الإقامة</div><div class="value editable">٢٥٧٦٢٠٤٨٧٥</div>
+            <div class="label">رقم النسخة</div><div class="value editable">١</div>
+            <div class="label">الجنس</div><div class="value editable">ذكر</div>
+
+            <div class="label">الاسم</div><div class="value editable full-width-row">LITON SHAIKH</div>
+
+            <div class="label">الاسم المترجم</div><div class="value editable full-width-row">ليتون شيخ</div>
+
+            <div class="label">تاريخ الميلاد</div><div class="value editable">١٤٠٨-٠٥-١٢</div>
+            <div class="label">دولة الميلاد</div><div class="value editable">بنجلاديش</div>
+            <div class="label">الحالة الاجتماعية</div><div class="value editable">أعزب</div>
+
+            <div class="label">الديانة</div><div class="value editable">الاسلام</div>
+            <div class="label">المهنة</div><div class="value editable">عامل انشاءات</div>
+            <div class="label"></div><div class="value"></div>
+
+            <div class="label">الحالة</div><div class="value editable">صالح</div>
+            <div class="label">تاريخ الدخول</div><div class="value editable">١٤٤٥-١١-٢١</div>
+            <div class="label">مكان الدخول</div><div class="value editable">مطار الملك فهد</div>
+        </div>
+
+        <hr>
+
+        <div class="section-header">بيانات الجواز</div>
+        <div class="info-grid">
+            <div class="label">الرقم</div><div class="value editable">EJ0620558</div>
+            <div class="label">الجنسية</div><div class="value editable">بنجلاديش</div>
+            <div class="label"></div><div class="value"></div>
+
+            <div class="label">تاريخ الاصدار</div><div class="value editable">١٤٤٣-٠٢-١٢</div>
+            <div class="label">تاريخ الانتهاء</div><div class="value editable">١٤٤٨-٠٤-٠٧</div>
+            <div class="label">مكان الإصدار</div><div class="value editable">دكا</div>
+        </div>
+
+        <hr>
+
+        <div class="section-header">بيانات الاقامة</div>
+        <div class="info-grid">
+            <div class="label">تاريخ الإصدار</div><div class="value editable">١٤٤٥-١٢-٠٢</div>
+            <div class="label">تاريخ الانتهاء</div><div class="value editable">١٤٤٧-٠٢-٢٣</div>
+            <div class="label">مكان الإصدار</div><div class="value editable">شركة العلم لامن</div>
+        </div>
+
+        <hr>
+
+        <div class="section-header">بيانات صاحب العمل</div>
+        <div class="employer-grid">
+            <div class="label">الرقم</div><div class="value editable">٧٠٣٨٨٤٣١٣٧</div>
+            <div class="label">الاسم</div><div class="value editable">شركة أرزاق علي آل الشلب للمقاولات</div>
+        </div>
+    </div>
+
+    <script>
+        // Data Handling
+        window.onload = function() {
+            const savedData = JSON.parse(localStorage.getItem('muqeemDataArabic'));
+            const valueElements = document.querySelectorAll('.value.editable');
+            if(savedData) {
+                valueElements.forEach((el, index) => {
+                    if(savedData[index] !== undefined) el.innerText = savedData[index];
+                });
+            }
+            generateForm();
+        };
+
+        function togglePanel() {
+            const panel = document.getElementById('editor-panel');
+            panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function generateForm() {
+            const container = document.getElementById('form-container');
+            const valueElements = document.querySelectorAll('.value.editable');
+            container.innerHTML = '';
+
+            // Updated Mapping with specific section titles
+            const labelMap = {
+                "تاريخ التقرير": "Report Date",
+                "رقم المشغل": "Operator Number",
+                "الموقع": "Location / Website",
+                "رقم الإقامة": "Iqama Number",
+                "رقم النسخة": "Version Number",
+                "الجنس": "Gender",
+                "الاسم": "Full Name",
+                "الاسم المترجم": "Translated Name",
+                "تاريخ الميلاد": "Date of Birth",
+                "دولة الميلاد": "Country of Birth",
+                "الحالة الاجتماعية": "Marital Status",
+                "الديانة": "Religion",
+                "المهنة": "Profession",
+                "الحالة": "Status",
+                "تاريخ الدخول": "Entry Date",
+                "مكان الدخول": "Entry Port",
+                "الرقم": "ID / Passport Number",
+                "الجنسية": "Nationality",
+                "تاريخ الاصدار": "Passport Issue Date", // Passport section
+                "تاريخ الإصدار": "Iqama Issue Date",    // Iqama section
+                "تاريخ الانتهاء": "Expiry Date",
+                "مكان الإصدار": "Place of Issue"
+            };
+
+            valueElements.forEach((el, index) => {
+                const rawArabic = el.previousElementSibling ? el.previousElementSibling.innerText.trim() : "";
+                
+                // Logic to distinguish duplicate labels based on their section
+                let englishLabel = labelMap[rawArabic] || rawArabic || ("Field " + (index + 1));
+                
+                // Extra check for unique identification
+                if (rawArabic === "تاريخ الاصدار" || rawArabic === "تاريخ الإصدار") {
+                    const sectionHeader = el.closest('.info-grid').previousElementSibling.previousElementSibling.innerText;
+                    if (sectionHeader.includes("الجواز")) englishLabel = "Passport Issue Date";
+                    if (sectionHeader.includes("الاقامة")) englishLabel = "Iqama Issue Date";
+                }
+
+                const div = document.createElement('div');
+                div.style.marginBottom = "8px";
+                div.innerHTML = `
+                    <label style="display:block; font-size:12px; font-weight:bold; color:#2c3e50; text-align:left;">${englishLabel}</label>
+                    <input type="text" class="editor-input" value="${el.innerText}" data-index="${index}" style="width:100%; padding:6px; border:1px solid #ccc; border-radius:4px; box-sizing: border-box;">
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function saveData() {
+            const inputs = document.querySelectorAll('.editor-input');
+            const valueElements = document.querySelectorAll('.value.editable');
+
+            inputs.forEach(input => {
+                const index = input.getAttribute('data-index');
+                valueElements[index].innerText = input.value;
+            });
+
+            // Show Toast Notification
+            const toast = document.getElementById('toast-notification');
+            toast.style.display = 'block';
+            
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 2000);
+
+            togglePanel();
+        }
+
+        if (localStorage.getItem("isLoggedIn") !== "true") {
+            window.location.href = "index.html";
+        }
+    </script>
+
+    <div id="toast-notification">Update Successful!</div>
+</body>
+</html>

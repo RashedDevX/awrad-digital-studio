@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Muqeem Resident Information - RashedDevX</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="font.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .value.editable.tt {
+            width: 95px;
+        }
+        .value.editable.bbo {
+            font-weight: 700;
+        }
+        /* এডিটর ফর্মের স্টাইল - যা মূল ডিজাইনে প্রভাব ফেলবে না */
+        #editor-panel {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: #fff;
+            border: 2px solid #2c3e50;
+            padding: 15px;
+            z-index: 1000;
+            width: 300px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            border-radius: 8px;
+            display: none; /* শুরুতে লুকানো থাকবে */
+        }
+        #editor-panel h3 { margin-top: 0; font-size: 16px; color: #2c3e50; border-bottom: 1px solid #ddd; padding-bottom: 5px; }
+        .input-group { margin-bottom: 10px; }
+        .input-group label { display: block; font-size: 11px; color: #666; font-family: sans-serif; }
+        .input-group input { width: 100%; padding: 5px; border: 1px solid #ccc; border-radius: 4px; font-size: 13px; }
+        .btn-group { display: flex; gap: 5px; position: sticky; bottom: 0; background: white; padding-top: 10px; }
+        .save-btn { background: #27ae60; color: white; border: none; padding: 8px 15px; cursor: pointer; border-radius: 4px; flex: 1; }
+        .close-btn { background: #e74c3c; color: white; border: none; padding: 8px 15px; cursor: pointer; border-radius: 4px; }
+        #toggle-editor { position: fixed; bottom: 20px; right: 20px; background: #2c3e50; color: white; border: none; padding: 10px 20px; border-radius: 50px; cursor: pointer; z-index: 999; box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
+        
+         @media print {
+            /* এডিটর বাটন এবং প্যানেল প্রিন্ট হবে না */
+            #editor-panel, #toggle-editor { 
+                display: none !important; 
+            }
+
+            /* ব্রাউজারের ডিফল্ট হেডার-ফুটার লুকানোর চেষ্টা করার জন্য */
+            @page {
+                margin: 0; /* মার্জিন জিরো করলে অনেক সময় হেডার চলে যায় */
+            }
+
+            body {
+                margin: 1cm; /* পেজ কন্টেন্টের জন্য আলাদা মার্জিন */
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <button id="toggle-editor" onclick="togglePanel()">Edit Information</button>
+
+    <div id="editor-panel">
+        <h3>Edit Values</h3>
+        <div id="form-container"></div>
+        <div class="btn-group">
+            <button class="save-btn" onclick="saveData()">Update & Save</button>
+            <button class="close-btn" onclick="togglePanel()">Close</button>
+        </div>
+    </div>
+
+    <div class="page">
+        <div class="header">
+            <div class="logo-section">
+                <img src="https://muqeem.sa/content/images/Xmuqeem.svg" alt="Muqeem Logo">
+            </div>
+            <div class="report-title">Resident's Information</div>
+            <div class="meta-info">
+                <div class="label">Report Date</div><div class="value editable">1447-7-16</div>
+                <div class="label">Operator ID</div><div class="value editable">1060203154</div>
+                <div class="label">Location</div><div class="value editable bbo">Muqeem Portal</div>
+            </div>
+        </div>
+
+        <hr>
+
+        <div class="section-header">Person Information - Head of Household</div>
+        
+        <div class="info-grid">
+            <div class="label">Iqama Number</div><div class="value editable">2588891370</div>
+            <div class="label">Version Number</div><div class="value editable">1</div>
+            <div class="label">Gender</div><div class="value editable">Male</div>
+
+            <div class="label">Name</div><div class="value editable tt">MD SHAMIM REZA</div>
+            <div class="label"></div><div class="value"></div>
+            <div class="label"></div><div class="value"></div>
+
+            <div class="label">Translated Name</div><div class="value arabic editable">محمد شاميم رضا</div>
+            <div class="label">Birth Country</div><div class="value editable">Bangladesh</div>
+            <div class="label">Martial Status</div><div class="value editable">Single</div>
+
+            <div class="label">Birth Date</div><div class="value editable">1412-11-23</div>
+            <div class="label">Occupation</div><div class="value editable">Construction Worker</div>
+            <div class="label"></div><div class="value"></div>
+
+            <div class="label">Religion</div><div class="value editable">Islam</div>
+            <div class="label">Entry Date</div><div class="value editable">1446-05-07</div>
+            <div class="label">Entry Location</div><div class="value editable">King Fahd International Airport</div>
+
+            <div class="label mm">Status</div><div class="value mm editable">Valid</div>
+            <div class="label"></div><div class="value"></div>
+            <div class="label"></div><div class="value"></div>
+        </div>
+
+        <hr>
+
+        <div class="section-header">Passport Information</div>
+        <div class="info-grid">
+            <div class="label">Number</div><div class="value editable">A14879995</div>
+            <div class="label">Nationality</div><div class="value editable">Bangladesh</div>
+            <div class="label"></div><div class="value"></div>
+
+            <div class="label">Issue Date</div><div class="value editable">1446-01-01</div>
+            <div class="label">Expiry Date</div><div class="value editable">1456-04-20</div>
+            <div class="label">Issue Location</div><div class="value arabic editable">دكا</div>
+        </div>
+
+        <hr>
+
+        <div class="section-header">Iqama Information</div>
+        <div class="info-grid">
+            <div class="label">Issue Date</div><div class="value editable">1446-05-15</div>
+            <div class="label">Expiry Date</div><div class="value editable">08-08-1447</div>
+            <div class="label">Issue Location</div><div class="value editable">Company Science Information Security</div>
+        </div>
+
+        <hr>
+
+        <div class="section-header">Employer Information</div>
+        <div class="employer-grid">
+            <div class="label">Number</div><div class="value editable">7038843467</div>
+            <div class="label">Name</div><div class="value arabic editable" style="width: auto">شركة مؤيد علي آل الشلب للمقاولات</div>
+        </div>
+    </div>
+
+    <script>
+        // পেজ লোড হওয়ার সময় আগের সেভ করা ডাটা দেখাবে
+        window.onload = function() {
+            const savedData = JSON.parse(localStorage.getItem('muqeemData'));
+            const valueElements = document.querySelectorAll('.value.editable');
+            
+            if(savedData) {
+                valueElements.forEach((el, index) => {
+                    if(savedData[index] !== undefined) el.innerText = savedData[index];
+                });
+            }
+            generateForm();
+        };
+
+        function togglePanel() {
+            const panel = document.getElementById('editor-panel');
+            panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
+            if(panel.style.display === 'block') generateForm();
+        }
+
+function generateForm() {
+    const container = document.getElementById('form-container');
+    container.innerHTML = '';
+    const valueElements = document.querySelectorAll('.value.editable');
+
+    let lastSectionHeader = "";
+
+    valueElements.forEach((el, index) => {
+        // বর্তমান এলিমেন্টের আগের সেকশন হেডার খুঁজে বের করা
+        let parentSection = el.closest('.page');
+        let allHeaders = Array.from(parentSection.querySelectorAll('.section-header, .report-title'));
+        let currentHeader = "";
+
+        // এলিমেন্টের ঠিক উপরে থাকা হেডারটি খুঁজে বের করা
+        for (let i = allHeaders.length - 1; i >= 0; i--) {
+            if (allHeaders[i].compareDocumentPosition(el) & Node.DOCUMENT_POSITION_FOLLOWING) {
+                currentHeader = allHeaders[i].innerText;
+                break;
+            }
+        }
+
+        // যদি নতুন কোনো সেকশন শুরু হয়, তবে একটি সাব-হেডিং যোগ করা
+        if (currentHeader !== lastSectionHeader && currentHeader !== "") {
+            const sectionDiv = document.createElement('div');
+            sectionDiv.style.cssText = "background: #f0f2f5; padding: 5px 10px; margin: 15px 0 10px 0; font-weight: bold; font-size: 12px; color: #2c3e50; border-left: 3px solid #2c3e50;";
+            sectionDiv.innerText = currentHeader;
+            container.appendChild(sectionDiv);
+            lastSectionHeader = currentHeader;
+        }
+
+        const label = el.previousElementSibling ? el.previousElementSibling.innerText : "Field " + (index + 1);
+        if(label.trim() === "") return;
+
+        const div = document.createElement('div');
+        div.className = 'input-group';
+        div.innerHTML = `
+            <label>${label}</label>
+            <input type="text" class="editor-input" value="${el.innerText}" data-index="${index}">
+        `;
+        container.appendChild(div);
+    });
+}
+
+        function saveData() {
+            const inputs = document.querySelectorAll('.editor-input');
+            const valueElements = document.querySelectorAll('.value.editable');
+            const dataToSave = {};
+
+            inputs.forEach(input => {
+                const index = input.getAttribute('data-index');
+                const newValue = input.value;
+                valueElements[index].innerText = newValue;
+                dataToSave[index] = newValue;
+            });
+
+            localStorage.setItem('muqeemData', JSON.stringify(dataToSave));
+            alert('Data updated successfully!');
+            togglePanel();
+        }
+    </script>
+    <script>
+        // চেক করা হচ্ছে ইউজার কি লগইন করা আছে?
+        if (localStorage.getItem("isLoggedIn") !== "true") {
+            // যদি লগইন না থাকে, তবে মেইন লগইন পেজে (index.html) পাঠিয়ে দিবে
+            window.location.href = "index.html";
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Awrad Al-Khaleej Admin - Enterprise Edition</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .sidebar-gradient {
+            background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900 overflow-hidden h-screen flex">
+
+    <div id="sidebar-overlay" onclick="toggleSidebar()" class="fixed inset-0 bg-slate-900/50 z-40 hidden lg:hidden transition-opacity duration-300"></div>
+
+    <div id="login-overlay" class="fixed inset-0 z-[100] bg-slate-900 flex items-center justify-center p-4 transition-opacity duration-500">
+        <div class="bg-white w-full max-w-md p-8 rounded-3xl shadow-2xl transform transition-all">
+            <div class="flex flex-col items-center">
+                <div class="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center mb-6 shadow-inner">
+                    <i class="fas fa-shield-halved text-3xl"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-slate-800 mb-2">Admin Gateway</h2>
+                <p class="text-slate-500 mb-8 text-center text-sm">Please enter your secure access key to continue to the dashboard.</p>
+                
+                <div class="w-full space-y-4">
+                    <div class="relative">
+                        <i class="fas fa-lock absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                        <input type="password" id="passInput" 
+                               class="w-full pl-12 pr-4 py-4 bg-slate-50 border-2 border-slate-100 rounded-xl outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition-all" 
+                               placeholder="Enter Password">
+                    </div>
+                    
+                    <button onclick="handleLogin()" 
+                            class="w-full bg-slate-900 text-white font-bold py-4 rounded-xl hover:bg-emerald-600 hover:shadow-lg hover:shadow-emerald-200 transition-all transform active:scale-[0.98]">
+                        ACCESS DASHBOARD
+                    </button>
+                    
+                    <p id="success-msg" class="hidden text-emerald-600 font-semibold text-center mt-4">
+                        <i class="fas fa-check-circle mr-2"></i> Access Granted! Redirecting...
+                    </p>
+                    <p id="error-msg" class="hidden text-rose-500 font-semibold text-center mt-4 bg-rose-50 py-2 rounded-lg border border-rose-100">
+                        <i class="fas fa-exclamation-circle mr-2"></i> পাসওয়ার্ড ভুল! সঠিক পাসওয়ার্ড দিন।
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-72 sidebar-gradient text-slate-300 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out">
+        <div class="flex flex-col h-full p-6">
+            <div class="mb-10 px-2">
+                <h1 class="text-emerald-500 font-bold text-xl leading-tight">Awrad Al-Khaleej</h1>
+                <p class="text-slate-500 text-xs font-light uppercase tracking-widest mt-1">General Contracting Co.</p>
+            </div>
+
+            <nav class="flex-grow space-y-2">
+                <a href="#" class="flex items-center gap-4 px-4 py-3 rounded-xl bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 shadow-sm transition-all">
+                    <i class="fas fa-chart-pie w-5"></i>
+                    <span class="font-semibold">Overview</span>
+                </a>
+                <a href="#" class="flex items-center gap-4 px-4 py-3 rounded-xl hover:bg-white/5 hover:text-white transition-all">
+                    <i class="fas fa-users w-5"></i>
+                    <span>Employees</span>
+                </a>
+                <a href="#" class="flex items-center gap-4 px-4 py-3 rounded-xl hover:bg-white/5 hover:text-white transition-all">
+                    <i class="fas fa-folder-open w-5"></i>
+                    <span>Documents</span>
+                </a>
+                <a href="#" class="flex items-center gap-4 px-4 py-3 rounded-xl hover:bg-white/5 hover:text-white transition-all">
+                    <i class="fas fa-gear w-5"></i>
+                    <span>Control Panel</span>
+                </a>
+            </nav>
+
+            <button onclick="logout()" class="mt-auto flex items-center justify-center gap-2 bg-rose-500/10 text-rose-500 p-4 rounded-xl font-bold hover:bg-rose-500 hover:text-white transition-all">
+                <i class="fas fa-power-off"></i>
+                Logout
+            </button>
+        </div>
+    </aside>
+
+    <main class="flex-grow flex flex-col min-w-0 lg:ml-72 transition-all">
+        <header class="h-20 bg-white/80 backdrop-blur-md border-b border-slate-200 flex items-center justify-between px-6 lg:px-10 sticky top-0 z-40">
+            <div class="flex items-center gap-4">
+                <button onclick="toggleSidebar()" class="lg:hidden text-slate-600 text-xl">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h2 class="text-xl font-bold text-slate-800">Enterprise Dashboard</h2>
+            </div>
+            
+            <div class="flex flex-col items-end">
+                <div id="clock" class="bg-rose-50 text-rose-600 px-5 py-1 rounded-t-xl font-bold text-sm border border-rose-100 border-b-0">
+                    00:00:00 PM
+                </div>
+                <div id="date" class="bg-rose-600 text-white px-5 py-0.5 rounded-b-xl font-bold text-[10px] uppercase tracking-wider w-full text-center">
+                    LOADING...
+                </div>
+            </div>
+        </header>
+
+        <section class="p-6 lg:p-10 overflow-y-auto flex-grow">
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+                <a href="https://cv-making-ar.netlify.app/" target="_blank" class="group relative overflow-hidden bg-gradient-to-br from-indigo-500 to-blue-600 p-8 rounded-[2rem] shadow-xl shadow-indigo-100 hover:-translate-y-2 transition-all duration-300">
+                    <div class="relative z-10">
+                        <div class="bg-white/20 w-14 h-14 rounded-2xl flex items-center justify-center mb-6 backdrop-blur-md">
+                            <i class="fas fa-address-card text-white text-2xl"></i>
+                        </div>
+                        <span class="text-white font-bold text-xl block">CV Builder</span>
+                        <p class="text-blue-100 text-sm mt-1">Generate professional CVs</p>
+                    </div>
+                    <i class="fas fa-address-card absolute -right-4 -bottom-4 text-white/10 text-9xl group-hover:scale-110 transition-transform"></i>
+                </a>
+
+                <a href="muqeem.html" target="_blank" class="group relative overflow-hidden bg-gradient-to-br from-emerald-400 to-teal-600 p-8 rounded-[2rem] shadow-xl shadow-emerald-100 hover:-translate-y-2 transition-all duration-300">
+                    <div class="relative z-10">
+                        <div class="bg-white/20 w-14 h-14 rounded-2xl flex items-center justify-center mb-6 backdrop-blur-md">
+                            <i class="fas fa-file-signature text-white text-2xl"></i>
+                        </div>
+                        <span class="text-white font-bold text-xl block">Muqeem EN</span>
+                        <p class="text-emerald-50 text-sm mt-1">English Document Panel</p>
+                    </div>
+                    <i class="fas fa-file-signature absolute -right-4 -bottom-4 text-white/10 text-9xl group-hover:scale-110 transition-transform"></i>
+                </a>
+
+                <a href="muqeem_arabic.html" target="_blank" class="group relative overflow-hidden bg-gradient-to-br from-pink-500 to-orange-500 p-8 rounded-[2rem] shadow-xl shadow-pink-100 hover:-translate-y-2 transition-all duration-300">
+                    <div class="relative z-10">
+                        <div class="bg-white/20 w-14 h-14 rounded-2xl flex items-center justify-center mb-6 backdrop-blur-md">
+                            <i class="fas fa-language text-white text-2xl"></i>
+                        </div>
+                        <span class="text-white font-bold text-xl block">Muqeem AR</span>
+                        <p class="text-pink-50 text-sm mt-1">Arabic Portal Access</p>
+                    </div>
+                    <i class="fas fa-language absolute -right-4 -bottom-4 text-white/10 text-9xl group-hover:scale-110 transition-transform"></i>
+                </a>
+
+                <a href="https://qr-code-genarate-online.netlify.app/" class="group relative overflow-hidden bg-gradient-to-br from-amber-400 to-orange-600 p-8 rounded-[2rem] shadow-xl shadow-amber-100 hover:-translate-y-2 transition-all duration-300">
+                    <div class="relative z-10">
+                        <div class="bg-white/20 w-14 h-14 rounded-2xl flex items-center justify-center mb-6 backdrop-blur-md">
+                            <i class="fas fa-qrcode text-white text-2xl"></i>
+                        </div>
+                        <span class="text-white font-bold text-xl block">QR Portal</span>
+                        <p class="text-amber-50 text-sm mt-1">Smart QR Generator</p>
+                    </div>
+                    <i class="fas fa-qrcode absolute -right-4 -bottom-4 text-white/10 text-9xl group-hover:scale-110 transition-transform"></i>
+                </a>
+            </div>
+            
+            <div class="mt-10 bg-white p-8 rounded-3xl border border-slate-200 shadow-sm">
+                <h3 class="text-lg font-bold text-slate-800 mb-2">Welcome to your Control Center</h3>
+                <p class="text-slate-500">Easily organize and oversee all company documentation and contracting workflows through this unified enterprise hub.</p>
+            </div>
+        </section>
+
+        <footer class="p-6 text-center border-t border-slate-200 bg-white">
+            <p class="text-slate-400 text-xs font-medium">
+                System Developed & Maintained by <span class="text-slate-600 font-bold">RashedDevX</span>
+            </p>
+        </footer>
+    </main>
+
+    <script>
+        const PASS = "1234";
+
+        // Login Persistence Check
+        window.onload = function() {
+            if (localStorage.getItem("isLoggedIn") === "true") {
+                document.getElementById('login-overlay').classList.add('hidden');
+            }
+        };
+
+        function handleLogin() {
+            const input = document.getElementById('passInput').value;
+            const successMsg = document.getElementById('success-msg');
+            const errorMsg = document.getElementById('error-msg');
+
+            if (input === PASS) {
+                errorMsg.classList.add('hidden');
+                localStorage.setItem("isLoggedIn", "true");
+                successMsg.classList.remove('hidden');
+                
+                setTimeout(() => {
+                    const overlay = document.getElementById('login-overlay');
+                    overlay.style.opacity = '0';
+                    setTimeout(() => {
+                        overlay.style.display = 'none';
+                    }, 500);
+                }, 800);
+            } else {
+                // কাস্টম এরর মেসেজ প্রদর্শন
+                successMsg.classList.add('hidden');
+                errorMsg.classList.remove('hidden');
+                // ইনপুট ফিল্ড ক্লিয়ার করা
+                document.getElementById('passInput').value = "";
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem("isLoggedIn");
+            location.reload();
+        }
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            
+            sidebar.classList.toggle('-translate-x-full');
+            overlay.classList.toggle('hidden');
+        }
+
+        function updateClock() {
+            const now = new Date();
+            // সময় আপডেট
+            document.getElementById('clock').innerText = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', second:'2-digit'});
+            // তারিখ আপডেট
+            const options = { day: 'numeric', month: 'short', year: 'numeric' };
+            document.getElementById('date').innerText = now.toLocaleDateString('en-GB', options);
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+    </script>
+</body>
+</html>

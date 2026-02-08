@@ -1,0 +1,125 @@
+:root {
+            --primary-orange: #ff7e05;
+            --text-dark: #333;
+            --line-color: #000;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            color: var(--text-dark);
+        }
+
+        /* A4 Page Setup */
+        .page {
+            width: 210mm;
+            min-height: 297mm;
+            padding: 5mm 5mm;
+            margin: 10mm auto;
+            background: white;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        @media print {
+            body { background: none; }
+            .page { margin: 0; box-shadow: none; }
+        }
+
+        /* Header Styles */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        .logo-section img {
+            height: 50px;
+        }
+
+        .report-title {
+            font-size: 20px;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .meta-info {
+            font-size: 13px;
+            display: grid;
+            grid-template-columns: 100px 100px;
+            gap: 5px;
+            justify-items: end;
+        }
+
+        .meta-info .label {
+            color: var(--primary-orange);
+            font-weight: 600;
+        }
+
+        .meta-info .value {
+            font-weight: 600;
+            text-align: right;
+        }
+
+        hr {
+            border: none;
+            border-top: 2px solid var(--line-color);
+            margin: 10px 0 25px 0;
+        }
+
+        /* Section Styling */
+        .section-header {
+            text-align: center;
+            font-size: 17px;
+            font-weight: 700;
+            margin-bottom: 30px;
+            margin-top: 10px;
+        }
+
+        /* Flexible Grid for matching the image layout */
+        .info-grid {
+            display: grid;
+            /* প্রথম কলামের width (1.2fr থেকে বাড়িয়ে 1.5fr) করা হয়েছে যাতে নাম না ভাঙে */
+            grid-template-columns: 1.5fr 1.8fr 1.2fr 1.8fr 1.2fr 1.2fr; 
+            gap: 10px 5px;
+            font-size: 14px;
+            margin-bottom: 35px;
+            align-items: start;
+        }
+
+        .label {
+            color: var(--primary-orange);
+            font-weight: 700;
+			width: 106px;
+        }
+
+        .value {
+            color: var(--text-dark);
+            font-weight: 400;
+            width: 123px;
+        }
+
+        .mm {
+            margin-top: -26px;
+        }
+
+        .value.arabic {
+            font-family: allMu;
+            display: contents;
+        }
+
+        /* Employer Section specific */
+        .employer-grid {
+            display: grid;
+            grid-template-columns: 140px auto;
+            gap: 15px;
+            font-size: 13px;
+        }
+
+        /* Utility classes for spacing */
+        .span-2 { grid-column: span 2; }
+        .mt-large { margin-top: 40px; }
